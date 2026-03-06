@@ -1,67 +1,24 @@
 // Maxim Diab & Thor Snyder
 // CSC 139
 // Spring 2026
-// Scheduler First Come First Served
+// Scheduler Priority
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "task.h"
 #include "list.h"
 #include "cpu.h"
 #include "schedulers.h"
 
-//Initialize head for linked list and task id counter
 struct node *head = NULL;
-static int tid_counter = 0;
 
-//Function for adding a task
-void addTask(char *name, int priority, int burst)
-{
-    //New task malloc
-    Task *newTask = malloc(sizeof(Task));
-    if (newTask == NULL)
-    {
-        perror("malloc failure");
-        exit(1);
-    }
-
-    //Gives the task ownership of its name string
-    newTask->name = strdup(name);
-    if (newTask->name == NULL)
-    {
-        perror("strdup failure");
-        free(newTask);
-        exit(1);
-    }
-
-    //Assign new task information
-    newTask->tid = tid_counter++;
-    newTask->priority = priority;
-    newTask->burst = burst;
-
-    //Add the new task to the linked list
-    insert(&head, newTask);
+void add(char *name, int priority, int burst) {
+    
 }
 
-//Returns the task at the head of the list, sets a new head
-Task *grabNextTask()
-{
-    if (head == NULL)
-        return NULL;
-
-    struct node *temp = head;
-    struct node *next = head->next;
-
-    while (next != NULL)
-    {
-        if (temp->task->tid > next->task->tid)
-        {
-            temp = next;
-        }
-        next = next->next;
-    }
-
-    return temp->task;
+Task *grabNextTask() {
+    
 }
 
 //Function for scheduling the next task
