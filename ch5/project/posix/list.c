@@ -41,6 +41,9 @@ void deleteTask(struct node **head, Task *task) {
 
         prev->next = temp->next;
     }
+    
+    // free the node to avoid memory leaks
+    free(temp);
 }
 
 // traverse the list
