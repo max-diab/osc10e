@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "task.h"
 #include "list.h"
 #include "cpu.h"
@@ -44,8 +43,8 @@ void add(char *name, int priority, int burst)
     insert(&head, newTask);
 }
 
-//Returns the task with the lowest tid
-Task *pickNextTask()
+//Returns the task at the head of the list, sets a new head
+Task *grabNextTask()
 {
     if (head == NULL)
         return NULL;
@@ -73,8 +72,8 @@ void schedule()
 
     if (n == 0)
     {
-        perror("empty task list");
-        exit(1);
+        printf("empty list\n");
+        return;
     }
 
     //Set time variables to 0
@@ -96,7 +95,7 @@ void schedule()
 
     while (head != NULL)
     {
-        Task *t = pickNextTask();
+        Task *t = grabNextTask();
         if (t == NULL)
             break;
 
@@ -130,7 +129,7 @@ void schedule()
             total_waiting += (double)waiting;
 
             //Free memory
-            deleteTask(&head, t);
+            delete(&head, t);
             free(t->name);
             free(t);
         }
