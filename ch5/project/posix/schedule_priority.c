@@ -73,8 +73,8 @@ void schedule()
 
     if (n == 0)
     {
-        perror("empty task list");
-        exit(1);
+        printf("empty list\n");
+        return;
     }
 
     //Set time variables to 0
