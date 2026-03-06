@@ -11,14 +11,58 @@
 #include "cpu.h"
 #include "schedulers.h"
 
+//Initialize head for linked list and task id counter
 struct node *head = NULL;
+static int tid_counter = 0;
 
-void add(char *name, int priority, int burst) {
-    
+//Function for adding a task
+void add(char *name, int priority, int burst)
+{
+    //New task malloc
+    Task *newTask = malloc(sizeof(Task));
+    if (newTask == NULL)
+    {
+        perror("malloc failure");
+        exit(1);
+    }
+
+    //Gives the task ownership of its name string
+    newTask->name = strdup(name);
+    if (newTask->name == NULL)
+    {
+        perror("strdup failure");
+        free(newTask);
+        exit(1);
+    }
+
+    //Assign new task information
+    newTask->tid = tid_counter++;
+    newTask->priority = priority;
+    newTask->burst = burst;
+
+    //Add the new task to the linked list
+    insert(&head, newTask);
 }
 
-Task *grabNextTask() {
-    
+//Returns the task with the highest priority
+Task *pickNextTask()
+{
+    if (head == NULL)
+        return NULL;
+
+    struct node *temp = head;
+    struct node *next = head->next;
+
+    while (next != NULL)
+    {
+        if (temp->task->priority < next->task->priority)
+        {
+            temp = next;
+        }
+        next = next->next;
+    }
+
+    return temp->task;
 }
 
 //Function for scheduling the next task
@@ -52,7 +96,7 @@ void schedule()
 
     while (head != NULL)
     {
-        Task *t = grabNextTask();
+        Task *t = pickNextTask();
         if (t == NULL)
             break;
 
@@ -86,7 +130,7 @@ void schedule()
             total_waiting += (double)waiting;
 
             //Free memory
-            delete(&head, t);
+            deleteTask(&head, t);
             free(t->name);
             free(t);
         }
