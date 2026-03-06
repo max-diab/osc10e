@@ -11,7 +11,7 @@ struct node *head = NULL;
 static int tid_counter = 0;
 
 //Function for adding a task
-void addTask(char *name, int priority, int burst)
+void add(char *name, int priority, int burst)
 {
     //New task malloc
     Task *newTask = malloc(sizeof(Task));
@@ -40,7 +40,7 @@ void addTask(char *name, int priority, int burst)
 }
 
 //Returns the task at the head of the list, sets a new head
-Task *grabNextTask()
+Task *pickNextTask()
 {
     if (head == NULL)
         return NULL;
@@ -91,7 +91,7 @@ void schedule()
 
     while (head != NULL)
     {
-        Task *t = grabNextTask();
+        Task *t = pickNextTask();
         if (t == NULL)
             break;
 
