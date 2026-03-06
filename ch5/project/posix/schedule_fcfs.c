@@ -6,11 +6,14 @@
 #include "cpu.h"
 #include "schedulers.h"
 
+//Initialize head for linked list and task id counter
 struct node *head = NULL;
 static int tid_counter = 0;
 
-void add(char *name, int priority, int burst)
+//Function for adding a task
+void addTask(char *name, int priority, int burst)
 {
+    //New task malloc
     Task *newTask = malloc(sizeof(Task));
     if (newTask == NULL)
     {
@@ -18,22 +21,26 @@ void add(char *name, int priority, int burst)
         exit(1);
     }
 
+    //Gives the task ownership of its name string
     newTask->name = strdup(name);
     if (newTask->name == NULL)
     {
-        perror("strup failure");
+        perror("strdup failure");
         free(newTask);
         exit(1);
     }
 
+    //Assign new task information
     newTask->tid = tid_counter++;
     newTask->priority = priority;
     newTask->burst = burst;
 
+    //Add the new task to the linked list
     insert(&head, newTask);
 }
 
-Task *pickNextTask()
+//Returns the task at the head of the list, sets a new head
+Task *grabNextTask()
 {
     if (head == NULL)
         return NULL;
@@ -53,6 +60,7 @@ Task *pickNextTask()
     return temp->task;
 }
 
+//Function for scheduling the next task
 void schedule()
 {
     int time = 0;
@@ -64,10 +72,12 @@ void schedule()
         exit(1);
     }
 
+    //Set time variables to 0
     double total_turnaround = 0;
     double total_waiting = 0;
     double total_response = 0;
 
+    //Allocate memory for start time
     int *first_start = malloc(sizeof(int) * n);
     if (!first_start)
     {
@@ -75,38 +85,46 @@ void schedule()
         exit(1);
     }
 
+    //Set all start times to -1
     for (int i = 0; i < n; i++)
         first_start[i] = -1;
 
     while (head != NULL)
     {
-        Task *t = pickNextTask();
+        Task *t = grabNextTask();
         if (t == NULL)
             break;
 
+        //Set start time if not already set
         if (first_start[t->tid] == -1)
         {
             first_start[t->tid] = time;
         }
 
+        //Store burst information, set slice to full burst for fcfs
         int original_burst = t->burst;
         int slice = t->burst;
 
+        //Run the task
         run(t, slice);
 
+        //Update time information, reduce remaining time for the task (burst)
         time += slice;
         t->burst -= slice;
 
         if (t->burst == 0)
         {
+            //Set task execution metrics
             int turnaround = time;
             int response = first_start[t->tid];
             int waiting = turnaround - original_burst;
 
+            //Set total execution metrics
             total_turnaround += (double)turnaround;
             total_response += (double)response;
             total_waiting += (double)waiting;
 
+            //Free memory
             delete(&head, t);
             free(t->name);
             free(t);
@@ -117,6 +135,7 @@ void schedule()
         }
     }
 
+    //Calculate and print the average execution metrics
     double avg_turnaround = total_turnaround / (double)n;
     double avg_waiting = total_waiting / (double)n;
     double avg_response = total_response / (double)n;
@@ -125,5 +144,6 @@ void schedule()
     printf("The average waiting time = %.2f\n", avg_waiting);
     printf("The average response time = %.2f\n", avg_response);
 
+    //Free memory
     free(first_start);
 }
