@@ -21,7 +21,7 @@ void insert(struct node **head, Task *newTask) {
 }
 
 // delete the selected task from the list
-void delete(struct node **head, Task *task) {
+void deleteTask(struct node **head, Task *task) {
     struct node *temp;
     struct node *prev;
 

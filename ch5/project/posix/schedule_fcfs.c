@@ -125,7 +125,7 @@ void schedule()
             total_waiting += (double)waiting;
 
             //Free memory
-            delete(&head, t);
+            deleteTask(&head, t);
             free(t->name);
             free(t);
         }
