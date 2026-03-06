@@ -106,7 +106,7 @@ void schedule()
             first_start[t->tid] = time;
         }
 
-        //Store burst information, set slice to full burst for fcfs
+        //Store burst information, set slice to full burst for sjf
         int original_burst = t->burst;
         int slice = t->burst;
 
@@ -133,10 +133,6 @@ void schedule()
             deleteTask(&head, t);
             free(t->name);
             free(t);
-        }
-        else
-        {
-            // Round Robin Stuff
         }
     }
 

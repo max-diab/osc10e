@@ -134,10 +134,6 @@ void schedule()
             free(t->name);
             free(t);
         }
-        else
-        {
-            // Round Robin Stuff
-        }
     }
 
     //Calculate and print the average execution metrics
